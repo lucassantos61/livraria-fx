@@ -1,0 +1,4 @@
+Esse é um teste de leitura de arquivos
+Queremos ler o conteúdo de todas as linhas]
+Mas como ler um arquivo java ?
+
