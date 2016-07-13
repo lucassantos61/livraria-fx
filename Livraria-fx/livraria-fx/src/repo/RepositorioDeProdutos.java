@@ -37,6 +37,8 @@ public class RepositorioDeProdutos {
 		outroLivro.setValor(59.90);
 		outroLivro.setISBN("978-85-66250-22-0");
 		
+	
+		
 		return FXCollections
 				.observableArrayList(livro,maisUmlivro,outroLivro);
 		

@@ -1,11 +1,19 @@
 package teste;
 
-import java.io.IOException;
 import java.util.Scanner;
+
+import application.Exportador;
+import br.com.casadocodigo.livraria.Autor;
+import br.com.casadocodigo.produto.Livro;
+import br.com.casadocodigo.produto.LivroImpresso;
 
 public class testeIO {
 	public static void main(String[] args) {
 		try {
+			Autor autor = new Autor();
+			autor.setNome("Lucas Ferreira");
+			Livro livro = new LivroImpresso(autor);
+			livro.SetNome("Livro do X");
 			
 			/*InputStream is = new FileInputStream("teste.txt");
 			InputStream is = System.in;
