@@ -2,9 +2,11 @@ package application;
 
 
 import java.util.List;
+import java.util.Observable;
 import java.io.IOException;
 import java.io.PrintStream;
 import br.com.casadocodigo.produto.Produto;
+import javafx.collections.ObservableList;
 
 public class Exportador {
 	
@@ -22,7 +24,5 @@ public class Exportador {
 			ps.close();
 	}
 	
-	public static void main(String [] args) throws IOException{
 	
-	}
 }
