@@ -76,7 +76,7 @@ public class Main extends Application {
 		primaryStage.show();
 	}
 
-	private void ExportarEmCSV(ObservableList<Produto> produtos) {
+	public void ExportarEmCSV(ObservableList<Produto> produtos) {
 		try {
 			new Exportador().paraCSV(produtos);
 		} catch (IOException e) {
