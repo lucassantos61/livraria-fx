@@ -3,6 +3,7 @@ package application;
 import java.io.IOException;
 
 import br.com.casadocodigo.produto.Produto;
+import dao.ProdutoDAO;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -17,7 +18,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.stage.Stage;
-import repo.RepositorioDeProdutos;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class Main extends Application {
@@ -28,13 +28,19 @@ public class Main extends Application {
 		Scene scence = new Scene(group, 690, 510);
 
 		/* Duvida */
-		ObservableList<Produto> produtos = new RepositorioDeProdutos().lista();
+		ObservableList<Produto> produtos = new ProdutoDAO().lista();
 		TableView tableView = new TableView<>(produtos);
 
 		Button button = new Button("Exportar CSV");
 		button.setLayoutX(575);
 		button.setLayoutY(25);
 		button.setOnAction(event -> {
+			try{
+				Thread.sleep(2000);
+			}catch(InterruptedException e){
+				System.out.println("OPs ! Ocorreu um erro :"+e);
+			}
+			
 			ExportarEmCSV(produtos);
 		});// mesmo metodo mas com um expressão lambda do java 8
 
