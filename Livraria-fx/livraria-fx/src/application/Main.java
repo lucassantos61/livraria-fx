@@ -31,17 +31,18 @@ public class Main extends Application {
 		ObservableList<Produto> produtos = new ProdutoDAO().lista();
 		TableView tableView = new TableView<>(produtos);
 
+		Label progresso = new Label();
+		
 		Button button = new Button("Exportar CSV");
 		button.setLayoutX(575);
 		button.setLayoutY(25);
 		button.setOnAction(event -> {
-			try{
-				Thread.sleep(2000);
-			}catch(InterruptedException e){
-				System.out.println("OPs ! Ocorreu um erro :"+e);
-			}
-			
-			ExportarEmCSV(produtos);
+			new Thread (()-> {
+				progresso.setText("Executando...");
+				DormePorSegundos();
+				ExportarEmCSV(produtos);
+				progresso.setText("Concluido");
+			}).start();
 		});// mesmo metodo mas com um expressão lambda do java 8
 
 		/*
@@ -51,7 +52,7 @@ public class Main extends Application {
 		 * Exportador().paraCSV(produtos); }catch(IOException e ){
 		 * System.out.println("Falhou ao exportar :"+e); } } });
 		 */
-
+		
 		TableColumn nomeColumn = new TableColumn("Nome");
 		nomeColumn.setMinWidth(180);
 		nomeColumn.setCellValueFactory(new PropertyValueFactory("nome"));
@@ -76,17 +77,25 @@ public class Main extends Application {
 		Label label = new Label("Listagem de livros");
 		label.setFont(Font.font("Lucida Grande", FontPosture.REGULAR, 30));
 		label.setPadding(new Insets(20, 0, 10, 10));
-		group.getChildren().addAll(label, vbox, button);
+		group.getChildren().addAll(label, vbox, button, progresso);
 		primaryStage.setScene(scence);
 		primaryStage.setTitle("Sistema de livraria com Java FX");
 		primaryStage.show();
 	}
 
-	public void ExportarEmCSV(ObservableList<Produto> produtos) {
+	private void ExportarEmCSV(ObservableList<Produto> produtos) {
 		try {
 			new Exportador().paraCSV(produtos);
 		} catch (IOException e) {
 			System.out.println("Falah ao criar o arquivo :" + e);
+		}
+	}
+	
+	private void DormePorSegundos(){
+		try{
+			Thread.sleep(2000);
+		}catch(InterruptedException e){
+			System.out.println("Ops! algo deu errado : "+e);
 		}
 	}
 

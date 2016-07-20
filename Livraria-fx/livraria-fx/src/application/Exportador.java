@@ -3,12 +3,13 @@ package application;
 
 import java.util.List;
 import java.util.Observable;
+import java.util.concurrent.RunnableFuture;
 import java.io.IOException;
 import java.io.PrintStream;
 import br.com.casadocodigo.produto.Produto;
 import javafx.collections.ObservableList;
 
-public class Exportador {
+public class Exportador{
 	
 	public void paraCSV(List<Produto> produtos)
 		throws IOException{
