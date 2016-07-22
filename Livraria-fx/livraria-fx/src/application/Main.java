@@ -6,6 +6,7 @@ import br.com.casadocodigo.produto.Produto;
 import dao.ProdutoDAO;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -23,28 +24,73 @@ import javafx.stage.Stage;
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
-
-		Group group = new Group();
-		Scene scence = new Scene(group, 690, 510);
-
+		
 		/* Duvida */
 		ObservableList<Produto> produtos = new ProdutoDAO().lista();
 		TableView tableView = new TableView<>(produtos);
+		
+		double valorTotal = produtos.stream().mapToDouble(Produto::getValor).sum();
+		
+		/*
+		int qtde = 0;
+		for (Produto produto : produtos){
+			valorTotal += produto.getValor();
+			qtde++;
+		}*/
+		
+		Group group = new Group();
+		Scene scene = new Scene(group, 690, 510);
+		
+		scene.getStylesheets().add(getClass()
+				.getResource("application.css").toExternalForm());
+		
+		
 
+		Label label = new Label("Listagem de livros");
+		label.setId("label-listagem");
+		/**
+		 *label.setFont(Font.font("Lucida Grande", FontPosture.REGULAR, 30)); 
+		 * label.setPadding(new Insets(20, 0, 10, 10));
+		label.setStyle("-fx-font-size: 30px; "
+				+ "-fx-padding: 20 0 10 10;");
+		 * */
+		
 		Label progresso = new Label();
+		progresso.setId("progresso");
+		
+		Label labelFooter = new Label(String.format("Você tem R$%.2f em estoque,"
+				+ "com um total de %d produtos", valorTotal,produtos.size()));
+		labelFooter.setId("label-footer");
 		
 		Button button = new Button("Exportar CSV");
-		button.setLayoutX(575);
-		button.setLayoutY(25);
+		button.setId("button");
 		button.setOnAction(event -> {
-			new Thread (()-> {
-				progresso.setText("Executando...");
-				DormePorSegundos();
-				ExportarEmCSV(produtos);
-				progresso.setText("Concluido");
-			}).start();
-		});// mesmo metodo mas com um expressão lambda do java 8
-
+				Task<Void> task = new Task<Void>(){
+					@Override
+					protected Void call() throws Exception{
+						DormePorSegundos();
+						ExportarEmCSV(produtos);
+						return null;
+					}
+				};
+				
+			/*
+			 * Sem java 8
+			 
+			task.setOnRunning(new EventHandler<WorkerStateEvent>(){
+				  @Override
+				  	public void handle(WorkerStateEvent e){
+				  	 progresso.setText("Exportando....");
+				  	}
+				  });
+			 * }
+			 * */	
+			
+			task.setOnRunning(e -> progresso.setText("exportando..."));
+			task.setOnSucceeded(e ->progresso.setText("concluido"));
+			new Thread(task).start();
+			});// mesmo metodo mas com um expressão lambda do java 8
+		
 		/*
 		 * (new EventHandler<ActionEvent>(){
 		 * 
@@ -72,17 +118,15 @@ public class Main extends Application {
 		tableView.getColumns().addAll(nomeColumn, descricaoColumn, valorColumn, isbnColumn);
 
 		VBox vbox = new VBox(tableView);
-		vbox.setPadding(new Insets(70, 0, 0, 10));
-
-		Label label = new Label("Listagem de livros");
-		label.setFont(Font.font("Lucida Grande", FontPosture.REGULAR, 30));
-		label.setPadding(new Insets(20, 0, 10, 10));
-		group.getChildren().addAll(label, vbox, button, progresso);
-		primaryStage.setScene(scence);
+		vbox.setId("vbox");
+		//vbox.setPadding(new Insets(70, 0, 0, 10));
+		
+		group.getChildren().addAll(label,labelFooter, vbox, button, progresso);
+		primaryStage.setScene(scene);
 		primaryStage.setTitle("Sistema de livraria com Java FX");
 		primaryStage.show();
 	}
-
+	
 	private void ExportarEmCSV(ObservableList<Produto> produtos) {
 		try {
 			new Exportador().paraCSV(produtos);
