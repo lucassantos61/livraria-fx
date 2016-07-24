@@ -13,7 +13,7 @@ public class Exportador{
 	
 	public void paraCSV(List<Produto> produtos)
 		throws IOException{
-			PrintStream ps = new PrintStream ("produtos.csv");
+			PrintStream ps = new PrintStream ("/home/lucas/Documentos/produtos.csv");
 			ps.println("Nome, Dexcrição, Valor, ISBN");
 			for (Produto produto: produtos){
 				ps.println(String.format("%s, %s, %s, %s,",

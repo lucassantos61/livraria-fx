@@ -131,7 +131,7 @@ public class Main extends Application {
 		try {
 			new Exportador().paraCSV(produtos);
 		} catch (IOException e) {
-			System.out.println("Falah ao criar o arquivo :" + e);
+			System.out.println("Falha ao criar o arquivo :" + e);
 		}
 	}
 	
